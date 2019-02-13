@@ -29,7 +29,7 @@ namespace BinaryTree
         /// <param name="item">The item that will be added.</param>
         public void Add(T item)
         {
-            Debug.WriteLine("Adding an item in this binary-tree..");
+            Debug.WriteLine($"Adding '{item}' in this binary-tree..");
 
             var currentNode = _parentNode;
             while (true)
@@ -82,7 +82,7 @@ namespace BinaryTree
         /// <param name="fullyRemoval">When set on true will remove said item without any respect towards their count.</param>
         public void Remove(T item, bool fullyRemoval = false)
         {
-            Debug.WriteLine("Removing an item in this binary-tree..");
+            Debug.WriteLine($"Removing '{item}' in this binary-tree..");
 
             var currentNode = _parentNode;
             Node prevNode = default;
@@ -125,14 +125,16 @@ namespace BinaryTree
 
             if (nodeToSkip.Left != null) countOfFurtherNodes++;
             if (prevNode == null)
-            {
                 switch (countOfFurtherNodes)
                 {
                     case 0:
-                        nodeToSkip.Item = (default(T), 0);
+                        nodeToSkip.Item = (default, 0);
                         return;
                     case 1:
-                        nodeToSkip.Item = nodeToSkip.Right?.Item ?? nodeToSkip.Left.Item;
+                        var correctNode = nodeToSkip.Right ?? nodeToSkip.Left;
+                        nodeToSkip.Item = correctNode.Item;
+                        nodeToSkip.Right = correctNode.Right;
+                        nodeToSkip.Left = correctNode.Left;
                         return;
                     case 2:
                         var temp = SearchForLeftMostRightNode(nodeToSkip);
@@ -143,7 +145,6 @@ namespace BinaryTree
                         nodeToSkip.Item = temp.Item;
                         return;
                 }
-            }
 
             var rightPath = nodeToSkip.Item.data.CompareTo(prevNode.Item.data);
             switch (countOfFurtherNodes)
@@ -197,7 +198,7 @@ namespace BinaryTree
         /// <returns>Returns the count of said item if existing - 0 if otherwise.</returns>
         public int Contains(T item)
         {
-            Debug.WriteLine("Searching an item in this binary-tree..");
+            Debug.WriteLine($"Searching '{item}' in this binary-tree..");
 
             var currentNode = _parentNode;
             while (true)
@@ -209,7 +210,7 @@ namespace BinaryTree
                 if (comparisionValue > 0)
                 {
                     if (currentNode.Right == null) return 0;
-                    
+
                     Debug.WriteLine($"{item} > {currentNode.Item.data} → search in right lower node..");
 
                     currentNode = currentNode.Right;
@@ -271,7 +272,6 @@ namespace BinaryTree
         /// <summary>
         ///     Represents a node of a binary-tree. This may be either a simple node, a parent, or a leaf.
         /// </summary>
-        /// <typeparam name="T">The type which this node should contain.</typeparam>
         [Serializable]
         [DataContract]
         private class Node

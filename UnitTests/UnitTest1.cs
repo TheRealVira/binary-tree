@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using BinaryTree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,7 +9,7 @@ namespace UnitTests
     public class UnitTest1
     {
         private BinaryTree<int> _testTree;
-        
+
         [TestInitialize]
         public void InitializeTest()
         {
@@ -80,6 +82,40 @@ namespace UnitTests
             _testTree.Serialize(fileName);
 
             Assert.AreEqual(BinaryTree<int>.Deserialize(fileName), _testTree);
+        }
+
+        [TestMethod]
+        public void TestCombinations()
+        {
+            // Test all sequences of 5 operations drawn from adding and removing four distinct elements.
+            for (var i = 0; i < 1 << 15; i++)
+            {
+                var list = new List<int>();
+                var tree = new BinaryTree<int>();
+
+                var program = i;
+                for (var j = 0; j < 5; j++)
+                {
+                    var instruction = program & 1;
+                    program >>= 1;
+                    var value = program & 3;
+                    program >>= 2;
+
+                    if (instruction == 0)
+                    {
+                        list.Add(value);
+                        tree.Add(value);
+                    }
+                    else
+                    {
+                        list.Remove(value);
+                        tree.Remove(value);
+                    }
+
+                    for (value = 0; value < 4; value++)
+                        Assert.AreEqual(list.Count(elt => elt == value), tree.Contains(value));
+                }
+            }
         }
     }
 }
