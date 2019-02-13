@@ -128,9 +128,12 @@ namespace BinaryTree
             {
                 switch (countOfFurtherNodes)
                 {
+                    case 0:
+                        nodeToSkip.Item = (default(T), 0);
+                        return;
                     case 1:
                         nodeToSkip.Item = nodeToSkip.Right?.Item ?? nodeToSkip.Left.Item;
-                        break;
+                        return;
                     case 2:
                         var temp = SearchForLeftMostRightNode(nodeToSkip);
                         Remove(temp.Item.data, true);
@@ -138,10 +141,8 @@ namespace BinaryTree
                         temp.Right = nodeToSkip.Right;
 
                         nodeToSkip.Item = temp.Item;
-                        break;
+                        return;
                 }
-
-                return;
             }
 
             var rightPath = nodeToSkip.Item.data.CompareTo(prevNode.Item.data);

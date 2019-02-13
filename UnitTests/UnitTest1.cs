@@ -57,6 +57,11 @@ namespace UnitTests
 
             _testTree.Remove(12);
             Assert.AreEqual(_testTree.Contains(12), 1);
+
+            _testTree.Clear();
+            _testTree.Add(5);
+            _testTree.Remove(5);
+            Assert.AreEqual(_testTree.Contains(5), 0);
         }
 
         [TestMethod]
